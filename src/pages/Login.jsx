@@ -13,27 +13,32 @@ const Login = () => {
   return (
     <Container className="h-100">
       <Row className="h-100 align-items-center justify-content-center">
-        <Col xl={6}>
+        <Col xl={5}>
           <Card className="shadow-sm py-2">
             <Card.Body>
-              <div className="d-flex justify-content-between">
-                <div>
-                  <Card.Title as="h4">Expense Tracker</Card.Title>
-                  <Card.Subtitle className="mb-2 text-muted">Sign in to your account</Card.Subtitle>
-                </div>
-                <FontAwesomeIcon className="display-6" icon={faAddressCard} />
-              </div>
+              <Card.Title className="display-6 text-muted text-center">Sign in to your account</Card.Title>
+              <Card.Subtitle as="h4" className="text-center mt-1 mb-5">Expense Tracker</Card.Subtitle>
               <Form className="mt-3">
-                <Form.Group className="mb-3" controlId="e-mail">
+                <Form.Group className="mb-3">
                   <Form.Label htmlFor="e-mail">Email address</Form.Label>
-                  <Form.Control type="email" placeholder="Enter email" required />
+                  <Form.Control 
+                    type="email" 
+                    placeholder="Enter email" 
+                    id="e-mail"
+                    required 
+                  />
                 </Form.Group>
-                <Form.Group className="mb-3" controlId="password">
+                <Form.Group className="mb-3">
                   <Form.Label htmlFor="password">Password</Form.Label>
-                  <Form.Control type="password" placeholder="Password" required />
+                  <Form.Control 
+                    type="password" 
+                    placeholder="Password" 
+                    id="password"
+                    required   
+                  />
                 </Form.Group>
                 <div className="mb-3">
-                  <Card.Link as={Link} to="/register">Create new account</Card.Link>
+                  <Card.Link as={Link} to="/register">Create new account here</Card.Link>
                 </div>
                 <Button variant="primary" type="submit" className="w-100 d-flex align-items-center justify-content-center gap-2">
                   <FontAwesomeIcon icon={faUser} />
