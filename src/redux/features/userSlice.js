@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { createUserWithEmailAndPassword, updateProfile, signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from '../../firebase';
 
 const formatErrorMessage = (message) => {
@@ -49,6 +49,10 @@ export const signInUser = createAsyncThunk('user/signInUser', async ({ email, pa
   }
 });
 
+export const logoutUser = createAsyncThunk('user/logoutUser', async () => {
+  await signOut(auth);
+});
+
 const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -56,10 +60,6 @@ const userSlice = createSlice({
     setUser(state, { payload }) {
       state.user = payload;
       state.isAuth = true; 
-    },
-    logoutUser(state) {
-      state.user = null;
-      state.isAuth = false;
     },
   },
   extraReducers: {
@@ -89,9 +89,13 @@ const userSlice = createSlice({
       state.loading = false;
       state.error = payload;
     },
+    [logoutUser.fulfilled] (state) {
+      state.user = null;
+      state.isAuth = false;
+    },
   },
 })
 
-export const { setUser, logoutUser } = userSlice.actions;
+export const { setUser } = userSlice.actions;
 
 export default userSlice.reducer;

@@ -10,7 +10,8 @@ import { useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './firebase';
 import { useDispatch, useSelector } from "react-redux";
-import { setUser, logoutUser } from './redux/features/userSlice';
+import { setUser } from './redux/features/userSlice';
+import ProtectedRoute from './components/ProtectedRoute';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -21,8 +22,6 @@ const App = () => {
       if (user) {
         const { uid, email, displayName } = user;
         dispatch(setUser({ uid, email, displayName }));
-      } else {
-        dispatch(logoutUser());
       }
     });
   }, []);
@@ -30,7 +29,11 @@ const App = () => {
   return (
     <BrowserRouter>  
       <Routes>
-        <Route exact path="/" element={isAuth ? <Dashboard /> : <Login />} />
+        <Route exact path="/" element={
+          <ProtectedRoute isAuth={isAuth} redirectTo="/login">
+            <Dashboard />
+          </ProtectedRoute>
+        } />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
       </Routes>
