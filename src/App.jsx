@@ -12,6 +12,7 @@ import { auth } from './firebase';
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from './redux/features/userSlice';
 import ProtectedRoute from './components/ProtectedRoute';
+import AuthRoute from './components/AuthRoute';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -30,12 +31,20 @@ const App = () => {
     <BrowserRouter>  
       <Routes>
         <Route exact path="/" element={
-          <ProtectedRoute isAuth={isAuth} redirectTo="/login">
+          <ProtectedRoute isAuth={isAuth}>
             <Dashboard />
           </ProtectedRoute>
         } />
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={
+          <AuthRoute isAuth={isAuth}>
+            <Register />
+          </AuthRoute>
+        } />
+        <Route path="/login" element={
+          <AuthRoute isAuth={isAuth}>
+            <Login />
+          </AuthRoute>
+        } />
       </Routes>
     </BrowserRouter>
   );
