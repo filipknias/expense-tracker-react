@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -8,8 +8,24 @@ import Button from 'react-bootstrap/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { createNewUser } from '../redux/features/userSlice';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
+  const dispatch = useDispatch();
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { user, loading, error } = useSelector((state) => state.user);
+  const naviagate = useNavigate();
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    dispatch(createNewUser({ firstName, lastName, email, password, naviagate }));
+  };
+
   return (
     <Container className="h-100">
       <Row className="h-100 align-items-center justify-content-center">
@@ -18,7 +34,7 @@ const Register = () => {
             <Card.Body>
               <Card.Title className="display-6 text-muted text-center">Create new account</Card.Title>
               <Card.Subtitle as="h4" className="text-center mt-1 mb-5">Expense Tracker</Card.Subtitle>
-              <Form className="mt-3">
+              <Form className="mt-3" onSubmit={handleSubmit}>
                 <Row>
                   <Col>
                     <Form.Group className="mb-3">
@@ -27,7 +43,9 @@ const Register = () => {
                         type="text" 
                         placeholder="First name" 
                         id="first-name" 
-                        required 
+                        required
+                        value={firstName} 
+                        onChange={(e) => setFirstName(e.target.value)}
                       />
                     </Form.Group>
                   </Col>
@@ -39,6 +57,8 @@ const Register = () => {
                         placeholder="Last name" 
                         id="last-name"
                         required 
+                        value={lastName} 
+                        onChange={(e) => setLastName(e.target.value)}
                       />
                     </Form.Group>
                   </Col>
@@ -50,6 +70,8 @@ const Register = () => {
                     placeholder="Enter email" 
                     id="e-mail"
                     required 
+                    value={email} 
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                 </Form.Group>
                 <Form.Group className="mb-3">
@@ -58,13 +80,20 @@ const Register = () => {
                     type="password" 
                     placeholder="Password"
                     id="password" 
+                    value={password} 
+                    onChange={(e) => setPassword(e.target.value)}
                     required 
                   />
                 </Form.Group>
                 <div className="mb-3">
                   <Card.Link as={Link} to="/login">Arleady have an account ? Sign in here</Card.Link>
                 </div>
-                <Button variant="primary" type="submit" className="w-100 d-flex align-items-center justify-content-center gap-2">
+                <Button 
+                  variant="primary" 
+                  type="submit" 
+                  className="w-100 d-flex align-items-center justify-content-center gap-2"
+                  disabled={loading ? true : false}  
+                >
                   <FontAwesomeIcon icon={faUser} />
                   Submit
                 </Button>
