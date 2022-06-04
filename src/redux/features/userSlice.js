@@ -2,6 +2,15 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from '../../firebase';
 
+const formatErrorMessage = (message) => {
+  switch (message) {
+    case 'auth/email-already-in-use': return "Email already in use";
+    case 'auth/weak-password': return "Password should be at least 6 characters";
+    case 'auth/invalid-email': return "Email should be valid address";
+    default: return "Something went wrong";
+  }
+};
+
 const initialState = {
   user: null,
   loading: false,
@@ -21,7 +30,7 @@ export const createNewUser = createAsyncThunk('user/createNewUser', async ({ fir
     return { uid, email, displayName };
   } catch (err) {
     console.log(err)
-    return rejectWithValue(err.message);
+    return rejectWithValue(formatErrorMessage(err.code));
   }
 });
 

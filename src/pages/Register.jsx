@@ -5,8 +5,9 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import Alert from 'react-bootstrap/Alert';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { createNewUser } from '../redux/features/userSlice';
@@ -18,7 +19,7 @@ const Register = () => {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { user, loading, error } = useSelector((state) => state.user);
+  const { loading, error } = useSelector((state) => state.user);
   const naviagate = useNavigate();
   
   const handleSubmit = async (e) => {
@@ -35,6 +36,12 @@ const Register = () => {
               <Card.Title className="display-6 text-muted text-center">Create new account</Card.Title>
               <Card.Subtitle as="h4" className="text-center mt-1 mb-5">Expense Tracker</Card.Subtitle>
               <Form className="mt-3" onSubmit={handleSubmit}>
+                {error && (
+                  <Alert variant="danger" className="d-flex align-items-center gap-2">
+                    <FontAwesomeIcon icon={faTriangleExclamation} />
+                    {error}
+                  </Alert>
+                )}
                 <Row>
                   <Col>
                     <Form.Group className="mb-3">
