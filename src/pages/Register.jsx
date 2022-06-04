@@ -20,11 +20,11 @@ const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { loading, error } = useSelector((state) => state.user);
-  const naviagate = useNavigate();
+  const navigate = useNavigate();
   
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(createNewUser({ firstName, lastName, email, password, naviagate }));
+    dispatch(createNewUser({ firstName, lastName, email, password, navigate }));
   };
 
   return (
@@ -99,7 +99,7 @@ const Register = () => {
                   variant="primary" 
                   type="submit" 
                   className="w-100 d-flex align-items-center justify-content-center gap-2"
-                  disabled={loading ? true : false}  
+                  disabled={loading}  
                 >
                   <FontAwesomeIcon icon={faUser} />
                   Submit
