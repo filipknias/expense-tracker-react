@@ -8,11 +8,13 @@ const formatErrorMessage = (message) => {
     case 'auth/weak-password': return "Password should be at least 6 characters";
     case 'auth/invalid-email': return "Email should be valid address";
     case 'auth/wrong-password': return "Wrong email or password";
+    case 'auth/user-not-found': return "Wrong email or password";
     default: return "Something went wrong";
   }
 };
 
 const initialState = {
+  isAuth: false,
   user: null,
   loading: false,
   error: null,
@@ -53,9 +55,11 @@ const userSlice = createSlice({
   reducers: {
     setUser(state, { payload }) {
       state.user = payload;
+      state.isAuth = true; 
     },
     logoutUser(state) {
       state.user = null;
+      state.isAuth = false;
     },
   },
   extraReducers: {
@@ -66,6 +70,7 @@ const userSlice = createSlice({
     [createNewUser.fulfilled] (state, { payload }) {
       state.user = payload;
       state.loading = false;
+      state.isAuth = true;
     },
     [createNewUser.rejected] (state, { payload }) {
       state.loading = false;
@@ -78,6 +83,7 @@ const userSlice = createSlice({
     [signInUser.fulfilled] (state, { payload }) {
       state.user = payload;
       state.loading = false;
+      state.isAuth = true;
     },
     [signInUser.rejected] (state, { payload }) {
       state.loading = false;

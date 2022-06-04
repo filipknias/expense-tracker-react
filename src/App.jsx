@@ -9,11 +9,12 @@ import Login from './pages/Login';
 import { useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './firebase';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setUser, logoutUser } from './redux/features/userSlice';
 
 const App = () => {
   const dispatch = useDispatch();
+  const { isAuth } = useSelector((state) => state.user);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -29,11 +30,11 @@ const App = () => {
   return (
     <BrowserRouter>  
       <Routes>
-        <Route exact path="/" element={<Dashboard />} />
+        <Route exact path="/" element={isAuth ? <Dashboard /> : <Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
       </Routes>
-  </BrowserRouter>
+    </BrowserRouter>
   );
 }
 

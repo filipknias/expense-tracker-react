@@ -6,10 +6,16 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faDoorClosed } from '@fortawesome/free-solid-svg-icons';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { logoutUser } from '../redux/features/userSlice';
 
 const Appbar = () => {
   const { user } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const handleLogout = () => {
+    dispatch(logoutUser());
+  };
+
   return (
     <Navbar bg="dark" variant="dark"  expand="lg">
       <Container>
@@ -21,7 +27,7 @@ const Appbar = () => {
                 <FontAwesomeIcon icon={faUser} />
                 Profile
               </NavDropdown.Item>
-              <NavDropdown.Item className="d-flex align-items-center gap-2">
+              <NavDropdown.Item className="d-flex align-items-center gap-2" onClick={handleLogout}>
                 <FontAwesomeIcon icon={faDoorClosed} />
                 Logout
               </NavDropdown.Item>
