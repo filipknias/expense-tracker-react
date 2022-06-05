@@ -1,9 +1,9 @@
 import React from 'react';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
-import Button from 'react-bootstrap/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMoneyBill, faSackDollar, faEllipsisVertical, faPlus, faBan } from '@fortawesome/free-solid-svg-icons';
+import AddExpenseModal from './AddExpenseModal';
 
 const ExpensesCard = () => {
   const listItems = [
@@ -58,10 +58,7 @@ const ExpensesCard = () => {
             </div>
           )}
         </div>
-        <Button className="mt-4 w-100 d-flex align-items-center justify-content-center gap-2">
-          <FontAwesomeIcon icon={faPlus} />
-          Add new expense
-        </Button>
+        <AddExpenseModal />
       </Card.Body>
     </Card>
   )
