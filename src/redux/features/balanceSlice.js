@@ -28,12 +28,14 @@ export const fetchBalance = createAsyncThunk('balance/fetchBalance', async ({ ui
   try {
     // Get documents from firestore
     dispatch(startRequest({ type: 'balance/fetch' }));
-    const expensesQuery = query(collection(db, "entries"), where("type", "==", 'expense'), where('uid', '==', uid));
-    const expensesSnapshot = await getDocs(expensesQuery);
-    const expenses = [];
-    expensesSnapshot.forEach((doc) => expenses.push({ id: doc.id, ...doc.data() }));
+    const balanceQuery = query(collection(db, "entries"), where('uid', '==', uid));
+    const balanceSnapshot = await getDocs(balanceQuery);
+    const data = [];
+    balanceSnapshot.forEach((doc) => data.push({ id: doc.id, ...doc.data() }));
+    const expenses = data.filter(({ type }) => type === 'expense');
+    const income = data.filter(({ type }) => type === 'income');
     dispatch(requestSuccess({ type: 'balance/fetch' }));
-    return { expenses, income: [] };
+    return { expenses, income };
   } catch (err) {
     console.log(err)
     return dispatch(requestFail({ type: 'balance/fetch' }));
