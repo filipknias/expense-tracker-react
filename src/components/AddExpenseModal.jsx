@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Alert from 'react-bootstrap/Alert';
-import { addNewExpense } from '../redux/features/balanceSlice';
+import { addNewEntry } from '../redux/features/balanceSlice';
 import { deleteRequest } from '../redux/features/requestSlice';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -20,10 +20,12 @@ const AddExpenseModal = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(addNewExpense({ 
+    dispatch(addNewEntry({ 
+      type: 'expense',
       name, 
       amount, 
-      uid: user.uid, 
+      uid: user.uid,
+      createdAt: new Date(), 
       setOpen, 
     }));
   };

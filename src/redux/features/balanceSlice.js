@@ -8,18 +8,17 @@ const initialState = {
   income: [],
 };
 
-export const addNewExpense = createAsyncThunk('balance/addNewExpense', async ({ name, amount, uid, setOpen }, { dispatch }) => {
+export const addNewEntry = createAsyncThunk('balance/addNewEntry', async ({ type, name, amount, uid, createdAt, setOpen }, { dispatch }) => {
   try {
     // Save document in firestore
-    dispatch(startRequest({ type: 'expense/add' }));
-    await addDoc(collection(db, 'expenses'), { uid, name, amount });
-    dispatch(requestSuccess({ type: 'expense/add' }));
+    dispatch(startRequest({ type: `${type}/add` }));
+    await addDoc(collection(db, 'entries'), { type, uid, name, amount, createdAt });
+    dispatch(requestSuccess({ type: `${type}/add` }));
     setOpen(false);
-
-    return { name, amount };
+    return { type, name, amount, uid, createdAt: createdAt.toISOString() };
   } catch (err) {
     console.log(err)
-    return dispatch(requestFail({ type: 'expense/add', error: err.code }));
+    return dispatch(requestFail({ type: `${type}/add` }));
   }
 });
 
@@ -30,8 +29,17 @@ const balanceSlice = createSlice({
     
   },
   extraReducers: {
-    [addNewExpense.fulfilled] (state, { payload }) {
-      state.expenses.push({ ...payload });
+    [addNewEntry.fulfilled] (state, { payload }) {
+      switch (payload.type) {
+        case 'expense': {
+          state.expenses.push({ ...payload });
+          break;
+        }
+        case 'income': {
+          state.income.push({ ...payload });
+          break;
+        }
+      }  
     },
   },
 });
