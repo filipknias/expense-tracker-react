@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMoneyBill, faSackDollar, faEllipsisVertical, faBan } from '@fortawesome/free-solid-svg-icons';
 import AddExpenseModal from './AddExpenseModal';
 import { useSelector } from 'react-redux';
+import EntriesList from './EntriesList';
 
 const ExpensesCard = () => {
   const { expenses } = useSelector((state) => state.balance);
@@ -18,24 +19,7 @@ const ExpensesCard = () => {
             Your expenses
           </Card.Title>
           {expenses.length > 0 ? (
-            <ListGroup className="mt-4">
-              {expenses.map(({ id, name, amount }) => (
-                <ListGroup.Item key={id} className="d-flex align-items-center justify-content-between py-3">
-                  <div className="d-flex align-items-center gap-3">
-                    <FontAwesomeIcon icon={faSackDollar} className="text-success h5 mb-1" />
-                    <h5 className="mb-1">{name}</h5>
-                  </div>
-                  <div className="d-flex align-items-center gap-3">
-                    <p className="text-danger h5 mb-1">-{amount} $</p>
-                    <FontAwesomeIcon 
-                      icon={faEllipsisVertical} 
-                      className="text-muted h5 mb-1" 
-                      style={{ cursor: 'pointer' }}  
-                    />
-                  </div>
-                </ListGroup.Item>
-              ))}
-            </ListGroup>
+            <EntriesList entries={expenses} />
           ) : (
             <div className="d-flex flex-column align-items-center justify-content-center gap-2 position-absolute top-50 start-50 translate-middle w-100">
               <FontAwesomeIcon icon={faBan} className="text-muted h1" />
