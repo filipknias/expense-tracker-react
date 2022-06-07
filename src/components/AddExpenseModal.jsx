@@ -25,7 +25,6 @@ const AddExpenseModal = () => {
       name, 
       amount, 
       uid: user.uid,
-      createdAt: new Date(), 
       setOpen, 
     }));
   };

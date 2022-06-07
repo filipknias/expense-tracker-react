@@ -2,27 +2,12 @@ import React from 'react';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMoneyBill, faSackDollar, faEllipsisVertical, faPlus, faBan } from '@fortawesome/free-solid-svg-icons';
+import { faMoneyBill, faSackDollar, faEllipsisVertical, faBan } from '@fortawesome/free-solid-svg-icons';
 import AddExpenseModal from './AddExpenseModal';
+import { useSelector } from 'react-redux';
 
 const ExpensesCard = () => {
-  const listItems = [
-    {
-      id: 1,
-      name: 'Food',
-      amount: 123,
-    },
-    {
-      id: 2,
-      name: 'Bills',
-      amount: 999,
-    },
-    {
-      id: 3,
-      name: 'Car',
-      amount: 12000,
-    },
-  ];
+  const { expenses } = useSelector((state) => state.balance);
 
   return (
     <Card className="h-100">
@@ -32,9 +17,9 @@ const ExpensesCard = () => {
             <FontAwesomeIcon icon={faMoneyBill} className="text-success" />
             Your expenses
           </Card.Title>
-          {listItems.length > 0 ? (
+          {expenses.length > 0 ? (
             <ListGroup className="mt-4">
-              {listItems.map(({ id, name, amount }) => (
+              {expenses.map(({ id, name, amount }) => (
                 <ListGroup.Item key={id} className="d-flex align-items-center justify-content-between py-3">
                   <div className="d-flex align-items-center gap-3">
                     <FontAwesomeIcon icon={faSackDollar} className="text-success h5 mb-1" />
