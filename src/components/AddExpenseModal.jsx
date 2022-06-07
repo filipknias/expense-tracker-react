@@ -14,12 +14,18 @@ const AddExpenseModal = () => {
   const [name, setName] = useState('');
   const [amount, setAmount] = useState(0);
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.user);
   const { requests } = useSelector((state) => state.requests);
   const addExpenseRequest = requests.find((request) => request.type === 'expense/add');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(addNewExpense({ name, amount, setOpen }));
+    dispatch(addNewExpense({ 
+      name, 
+      amount, 
+      uid: user.uid, 
+      setOpen, 
+    }));
   };
 
   useEffect(() => {
@@ -71,7 +77,7 @@ const AddExpenseModal = () => {
                 required
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                min="0"
+                min="1"
               />
             </Form.Group>
           </Modal.Body>

@@ -8,11 +8,11 @@ const initialState = {
   income: [],
 };
 
-export const addNewExpense = createAsyncThunk('balance/addNewExpense', async ({ name, amount, setOpen }, { dispatch }) => {
+export const addNewExpense = createAsyncThunk('balance/addNewExpense', async ({ name, amount, uid, setOpen }, { dispatch }) => {
   try {
     // Save document in firestore
     dispatch(startRequest({ type: 'expense/add' }));
-    await addDoc(collection(db, 'expenses'), { name, amount });
+    await addDoc(collection(db, 'expenses'), { uid, name, amount });
     dispatch(requestSuccess({ type: 'expense/add' }));
     setOpen(false);
 
