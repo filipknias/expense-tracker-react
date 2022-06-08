@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import ResetBalanceModal from './ResetBalanceModal';
 
 const calculatePercent = (amount, total) => {
+  if (total === 0) return 100;
   return parseInt((amount / total) * 100);
 };
 
@@ -47,17 +48,21 @@ const BalanceCard = () => {
             </div>
           </div>
           <div className="d-flex flex-column gap-3">
-            <div>
-              <h5 className="mb-3">Income</h5>
-              <ProgressBar variant="success" now={percentIncome} label={`${percentIncome}%`} />
-            </div>
-            <div>
-              <h5 className="mb-3">Expenses</h5>
-              <ProgressBar variant="danger" now={percentExpenses} label={`${percentExpenses}%`} />
-            </div>
+            {income.length > 0 && (
+              <div>
+                <h5 className="mb-3">Income</h5>
+                <ProgressBar variant="success" now={percentIncome} label={`${percentIncome}%`} />
+              </div>
+            )}
+            {expenses.length > 0 && (
+              <div>
+                <h5 className="mb-3">Expenses</h5>
+                <ProgressBar variant="danger" now={percentExpenses} label={`${percentExpenses}%`} />
+              </div>
+            )}
           </div>
         </div>
-        <ResetBalanceModal />
+        {income.concat(expenses).length > 0 && <ResetBalanceModal />}
       </Card.Body>
     </Card>
   )
