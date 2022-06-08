@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { db } from '../../firebase';
-import { addDoc, collection, query, where, getDocs } from "firebase/firestore";
+import { addDoc, collection, query, where, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { startRequest, requestSuccess, requestFail } from './requestSlice';
 import { timestamp } from '../../firebase';
 
@@ -42,6 +42,16 @@ export const fetchBalance = createAsyncThunk('balance/fetchBalance', async ({ ui
   }
 });
 
+export const deleteEntry = createAsyncThunk('balance/deleteEntry', async ({ type, id }) => {
+  try {
+    // Delete document from firestore
+    await deleteDoc(doc(db, "entries", id));
+    return { type, id };
+  } catch (err) {
+    console.log(err)
+  }
+});
+
 const balanceSlice = createSlice({
   name: 'balance',
   initialState,
@@ -62,6 +72,19 @@ const balanceSlice = createSlice({
       const { expenses, income } = payload;
       state.expenses = expenses;
       state.income = income;
+    },
+    [deleteEntry.fulfilled] (state, { payload }) {
+      const { type, id } = payload;
+      switch (type) {
+        case 'expense': {
+          state.expenses = state.expenses.filter((expense) => expense.id !== id);
+          break;
+        }
+        case 'income': {
+          state.income = state.income.filter((income) => income.id !== id);
+          break;
+        }
+      } 
     },
   },
 });
