@@ -52,6 +52,21 @@ export const deleteEntry = createAsyncThunk('balance/deleteEntry', async ({ type
   }
 });
 
+export const resetBalance = createAsyncThunk('balance/resetBalance', async ({ uid, setOpen }, { dispatch }) => {
+  try {
+    // Delete documents from firestore
+    dispatch(startRequest({ type: 'balance/reset' }));
+    const entriesQuery = query(collection(db, "entries"), where('uid', '==', uid));
+    const entriesSnapshot = await getDocs(entriesQuery);
+    entriesSnapshot.forEach(async(doc) => await deleteDoc(doc.ref));
+    dispatch(requestSuccess({ type: 'balance/reset' }));
+    setOpen(false);
+  } catch (err) {
+    console.log(err);
+    dispatch(requestFail({ type: 'balance/reset' }));
+  }
+});
+
 const balanceSlice = createSlice({
   name: 'balance',
   initialState,
@@ -85,6 +100,10 @@ const balanceSlice = createSlice({
           break;
         }
       } 
+    },
+    [resetBalance.fulfilled] (state) {
+      state.expenses = [];
+      state.income = [];
     },
   },
 });
