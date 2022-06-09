@@ -21,15 +21,15 @@ const Dashboard = () => {
   return (
     <div className="d-flex flex-column h-100">
       <Appbar /> 
-      <Container className="py-5" style={{ flex: 1 }}>
-        <Row className="h-100">
-          <Col xl={4}>
+      <Container className="py-5 px-4" style={{ flex: 1 }}>
+        <Row className="h-100 gap-5 gap-lg-0">
+          <Col lg={4} className="h-100">
             <BalanceCard />
           </Col>
-          <Col xl={4}>
+          <Col lg={4} className="h-100">
             <ExpensesCard />
           </Col> 
-          <Col xl={4}>
+          <Col lg={4} className="h-100">
             <IncomeCard />
           </Col> 
         </Row> 
