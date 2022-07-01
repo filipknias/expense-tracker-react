@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { db } from '../../firebase';
-import { addDoc, collection, query, where, getDocs, deleteDoc, doc } from "firebase/firestore";
+import { addDoc, collection, query, where, getDocs, deleteDoc, doc, orderBy } from "firebase/firestore";
 import { startRequest, requestSuccess, requestFail } from './requestSlice';
 import { timestamp } from '../../firebase';
 
@@ -9,15 +9,21 @@ const initialState = {
   income: [],
 };
 
+const parseEntriesDateToString = (entries) => {
+  return entries.map((entry) => {
+    return { ...entry, createdAt: entry.createdAt.toString() };
+  }); 
+};
+
 export const addNewEntry = createAsyncThunk('balance/addNewEntry', async ({ type, name, amount, uid, setOpen }, { dispatch }) => {
   try {
     // Save document in firestore
     dispatch(startRequest({ type: `${type}/add` }));
-    const createdAt = timestamp.toDate().toDateString();
+    const createdAt = timestamp;
     const { id } = await addDoc(collection(db, 'entries'), { type, uid, name, amount, createdAt });
     dispatch(requestSuccess({ type: `${type}/add` }));
     setOpen(false);
-    return { id, type, name, amount, uid, createdAt };
+    return { id, type, name, amount, uid, createdAt: createdAt.toString() };
   } catch (err) {
     console.log(err)
     dispatch(requestFail({ type: `${type}/add` }));
@@ -32,8 +38,11 @@ export const fetchBalance = createAsyncThunk('balance/fetchBalance', async ({ ui
     const balanceSnapshot = await getDocs(balanceQuery);
     const data = [];
     balanceSnapshot.forEach((doc) => data.push({ id: doc.id, ...doc.data() }));
-    const expenses = data.filter(({ type }) => type === 'expense');
-    const income = data.filter(({ type }) => type === 'income');
+    // Parse created at date 
+    const parsedData = parseEntriesDateToString(data); 
+    // Filter entries to their own arrays
+    const expenses = parsedData.filter(({ type }) => type === 'expense');
+    const income = parsedData.filter(({ type }) => type === 'income');
     dispatch(requestSuccess({ type: 'balance/fetch' }));
     return { expenses, income };
   } catch (err) {
@@ -64,6 +73,20 @@ export const resetBalance = createAsyncThunk('balance/resetBalance', async ({ ui
   } catch (err) {
     console.log(err);
     dispatch(requestFail({ type: 'balance/reset' }));
+  }
+});
+
+export const sortEntries = createAsyncThunk('balance/sortEntries', async ({ uid, type, sortBy }) => {
+  try {
+    // Get sorted documents from firestore
+    const entriesQuery = query(collection(db, "entries"), where('uid', '==', uid), where('type', '==', type), orderBy(sortBy, 'desc'));
+    const entriesSnapshot = await getDocs(entriesQuery);
+    const entries = [];
+    entriesSnapshot.forEach((doc) => entries.push({ id: doc.id, ...doc.data() }));
+    const parsedEntries = parseEntriesDateToString(entries);
+    return { type, entries: parsedEntries };
+  } catch (err) {
+    console.log(err)
   }
 });
 
@@ -105,9 +128,21 @@ const balanceSlice = createSlice({
       state.expenses = [];
       state.income = [];
     },
+    [sortEntries.fulfilled] (state, { payload }) {
+      switch (payload.type) {
+        case 'expense': {
+          state.expenses = payload.entries;
+          break;
+        }
+        case 'income': {
+          state.income = payload.entries;
+          break;
+        }
+      } 
+    }
   },
 });
 
-export const {  } = balanceSlice.actions;
+export const { } = balanceSlice.actions;
 
 export default balanceSlice.reducer;
