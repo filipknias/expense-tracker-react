@@ -19,7 +19,7 @@ const IncomeCard = () => {
               <FontAwesomeIcon icon={faMoneyBill} className="text-success" />
               Your income
             </div>
-            <SortEntriesDropdown type="income" />
+            {income.length > 1 && <SortEntriesDropdown type="income" />}
           </Card.Title>
           {income.length > 0 ? (
             <EntriesList entries={income} />

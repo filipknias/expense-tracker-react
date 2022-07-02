@@ -19,7 +19,7 @@ const ExpensesCard = () => {
               <FontAwesomeIcon icon={faMoneyBill} className="text-success" />
               Your expenses
             </div>
-            <SortEntriesDropdown type="expense" />
+            {expenses.length > 1 && <SortEntriesDropdown type="expense" />}
           </Card.Title>
           {expenses.length > 0 ? (
             <EntriesList entries={expenses} />
